@@ -19,7 +19,7 @@ LIGHT_BLUE='\033[1;34m'
 NC='\033[0m' 
 
 SUPPORTED_DISTRIBUTIONS=("Ubuntu" "Debian")
-SUPPORTED_VERSIONS=("24.04" "23.04" "22.04" "20.04" "12" "11" "10" "9" "8")
+SUPPORTED_VERSIONS=("24.04" "23.04" "22.04" "20.04" "13" "12" "11" "10" "9" "8")
 
 check_os() {
     local os_name=$(lsb_release -is)
@@ -508,7 +508,7 @@ fi
 echo -e "${YELLOW}Now to install NVM, Node, npm and yarn${NC}"
 sleep 2
 
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+curl https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 
 nvm_init='export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
