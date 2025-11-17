@@ -635,23 +635,29 @@ case "$continue_prod" in
         echo -e "${YELLOW}Installing packages and dependencies for Production...${NC}"
         sleep 2
 
-        yes | sudo bench setup production "$USER" && \
+        export ANSIBLE_ALLOW_WORLD_READABLE_TMPFILES=true
+        export ALLOW_BROKEN_CONDITIONALS=True
+        yes | sudo -E bench setup production "$USER" && \
         echo -e "${YELLOW}Applying necessary permissions to supervisor...${NC}"
         sleep 1
 
         FILE="/etc/supervisor/supervisord.conf"
         SEARCH_PATTERN="chown=$USER:$USER"
 
-        if grep -q "$SEARCH_PATTERN" "$FILE"; then
-            echo -e "${YELLOW}User ownership already exists for supervisord. Updating it...${NC}"
-            sudo sed -i "/chown=.*/c $SEARCH_PATTERN" "$FILE"
+        if [ -f "$FILE" ]; then
+            if grep -q "$SEARCH_PATTERN" "$FILE"; then
+                echo -e "${YELLOW}User ownership already exists for supervisord. Updating it...${NC}"
+                sudo sed -i "/chown=.*/c $SEARCH_PATTERN" "$FILE"
+            else
+                echo -e "${YELLOW}User ownership does not exist for supervisor. Adding it...${NC}"
+                sudo sed -i "5a $SEARCH_PATTERN" "$FILE"
+            fi
         else
-            echo -e "${YELLOW}User ownership does not exist for supervisor. Adding it...${NC}"
-            sudo sed -i "5a $SEARCH_PATTERN" "$FILE"
+            echo -e "${YELLOW}Supervisor config not found, will configure on second run...${NC}"
         fi
 
         sudo service supervisor restart && \
-        yes | sudo bench setup production "$USER" && \
+        yes | sudo -E bench setup production "$USER" && \
         echo -e "${YELLOW}Enabling Scheduler...${NC}"
         sleep 1
 
