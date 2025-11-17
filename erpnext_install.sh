@@ -391,7 +391,11 @@ sleep 2
 #
 echo -e "${YELLOW}Installing preliminary package requirements${NC}"
 sleep 3
-sudo apt install software-properties-common git curl whiptail cron -y
+if [ "$DISTRO" == "Ubuntu" ]; then
+    sudo apt install software-properties-common git curl whiptail cron -y
+else
+    sudo apt install git curl whiptail cron -y
+fi
 
 #
 # ─── PYTHON AND REDIS INSTALL ───────────────────────────────────────────────────────────
