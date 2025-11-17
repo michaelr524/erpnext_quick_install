@@ -565,7 +565,7 @@ if [[ -n "$externally_managed_file" ]]; then
 fi
 
 sudo apt install python3-pip -y
-sudo pip3 install frappe-bench
+sudo pip3 install --ignore-installed frappe-bench
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
